@@ -36,7 +36,11 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 		for algorithm in algorithms:
 			print('Testing {} algorithm:'.format(algorithm))
 			start = time.time()
-			algorithm_instance = algorithm()
+			if algorithm == SVC:
+				# Le mode par défaut dans la prochaine version est avec gamma='scale' et on voit la différence.
+				algorithm_instance = algorithm(gamma='scale')
+			else:
+				algorithm_instance = algorithm()
 			algorithm_instance.fit(reducedX, Y)
 			algorithm_score = algorithm_instance.score(reducedDevX, devY)
 			end = time.time()
@@ -45,13 +49,13 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 			csvrow.extend([algorithm_score, end - start])
 		csvwriter.writerow(csvrow)
 
-# BenchmarkPCA(open('generated/pca.csv', 'w'), np.array(range(5, 100, 5)) / 100, [DMIN, SVC, KNeighborsClassifier])
-# BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(55, 70, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
+BenchmarkPCA(open('generated/pca.csv', 'w'), np.array(range(5, 100, 5)) / 100, [DMIN, SVC, KNeighborsClassifier])
+BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(55, 70, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
 
-
+"""
 pca = PCA(n_components=0.95)
 reducedX = pca.fit_transform(X)
 reducedDevX = pca.transform(devX)
 dmin = DMIN()
 dmin.fit(reducedX, Y)
-print('Score: {}'.format(dmin.score(reducedDevX, devY)))
+print('Score: {}'.format(dmin.score(reducedDevX, devY)))"""
