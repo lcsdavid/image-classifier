@@ -55,4 +55,4 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 
 dmin = DMIN()
 dmin.fit(X, Y)
-print(dmin.score(X, Y))
+print('{}%'.format(dmin.score(X, Y) * 100))
