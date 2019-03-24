@@ -1,0 +1,20 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+
+\PYG{k}{class} \PYG{n+nc}{DMIN}\PYG{p}{:}
+	\PYG{k}{def} \PYG{n+nf}{\PYGZus{}\PYGZus{}init\PYGZus{}\PYGZus{}}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{):}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([])}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{label} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([])}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}label} \PYG{o}{=} \PYG{l+m+mi}{0}
+
+	\PYG{k}{def} \PYG{n+nf}{fit}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{data}\PYG{p}{,} \PYG{n}{label}\PYG{p}{):}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data} \PYG{o}{=} \PYG{n}{data}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{label} \PYG{o}{=} \PYG{n}{label}
+		\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{n\PYGZus{}label} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{(}\PYG{n}{label}\PYG{p}{))}
+
+	\PYG{k}{def} \PYG{n+nf}{predict}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{data}\PYG{p}{):}
+		\PYG{k}{return} \PYG{p}{[}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{label}\PYG{p}{[}\PYG{n}{np}\PYG{o}{.}\PYG{n}{argmin}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{subtract}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{data}\PYG{p}{,} \PYG{n}{data}\PYG{p}{[}\PYG{n}{iterator}\PYG{p}{])} \PYG{o}{**} \PYG{l+m+mi}{2}\PYG{p}{,} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{))]} \PYG{k}{for} \PYG{n}{iterator} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{data}\PYG{p}{))]}
+
+	\PYG{k}{def} \PYG{n+nf}{score}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{p}{,} \PYG{n}{data}\PYG{p}{,} \PYG{n}{label}\PYG{p}{):}
+		\PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{count\PYGZus{}nonzero}\PYG{p}{(}\PYG{n+nb+bp}{self}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)} \PYG{o}{==} \PYG{n}{label}\PYG{p}{)} \PYG{o}{/} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,34 @@
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{lmodern}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{color}
+\usepackage{fullpage}
+\usepackage{graphicx}
+\usepackage[cache=false]{minted}
+\usepackage{parskip}
+
+\usepackage[top=2cm,bottom=2cm,left=18mm,right=18mm]{geometry}
+
+\author{Lucas David \& Théo Legars}
+
+\title{Rapport de projet de reconnaissance d'images}
+\date{}
+
+\begin{document}
+\maketitle
+
+\section{Implémentation du classifieur à distance minimum (DMIN)}
+
+On choisi d'implémenter ce classifieur sous forme d'une classe, ceci étant le plus courant et le plus pratique pour encapsuler les comportements et stocker les données nécessaires.
+
+\inputminted{python}{../dmin.py}[breaklines=true]
+
+\end{document}
