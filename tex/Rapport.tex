@@ -9,13 +9,49 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
-\usepackage{color}
+\usepackage{xcolor}
+\usepackage{tikz}
 \usepackage{fullpage}
 \usepackage{graphicx}
-\usepackage[cache=false]{minted}
+\usepackage{listings}
 \usepackage{parskip}
 
 \usepackage[top=2cm,bottom=2cm,left=18mm,right=18mm]{geometry}
+
+\lstset{
+    backgroundcolor=\color[HTML]{2B2B2B}, 
+    basicstyle=\ttfamily\color[HTML]{A9B7C6},  
+    commentstyle=\color[HTML]{808080},
+    keywordstyle=\color[HTML]{CC7832},
+    otherkeywords={self},
+    numberstyle=\tiny\color[HTML]{6897BB},
+    stringstyle=\color[HTML]{6A8759},
+    breakatwhitespace=false,         
+    breaklines=true,        
+    columns=fullflexible,          
+    keepspaces=true,                          
+    language=Python,
+    literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
+      {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
+      {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
+      {À}{{\`A}}1 {È}{{\'E}}1 {Ì}{{\`I}}1 {Ò}{{\`O}}1 {Ù}{{\`U}}1
+      {ä}{{\"a}}1 {ë}{{\"e}}1 {ï}{{\"i}}1 {ö}{{\"o}}1 {ü}{{\"u}}1
+      {Ä}{{\"A}}1 {Ë}{{\"E}}1 {Ï}{{\"I}}1 {Ö}{{\"O}}1 {Ü}{{\"U}}1
+      {â}{{\^a}}1 {ê}{{\^e}}1 {î}{{\^i}}1 {ô}{{\^o}}1 {û}{{\^u}}1
+      {Â}{{\^A}}1 {Ê}{{\^E}}1 {Î}{{\^I}}1 {Ô}{{\^O}}1 {Û}{{\^U}}1
+      {Ã}{{\~A}}1 {ã}{{\~a}}1 {Õ}{{\~O}}1 {õ}{{\~o}}1
+      {œ}{{\oe}}1 {Œ}{{\OE}}1 {æ}{{\ae}}1 {Æ}{{\AE}}1 {ß}{{\ss}}1
+      {ű}{{\H{u}}}1 {Ű}{{\H{U}}}1 {ő}{{\H{o}}}1 {Ő}{{\H{O}}}1
+      {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
+      {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
+      {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1,
+	numbers=left,                    
+    numbersep=5pt, 	
+	tabsize=2,
+	showspaces=false,                
+    showstringspaces=false,
+    showtabs=false
+}
 
 \author{Lucas David \& Théo Legars}
 
@@ -29,16 +65,28 @@
 
 On choisi d'implémenter ce classificateur sous forme d'une classe, ceci étant le plus courant et le plus pratique pour encapsuler les comportements et stocker les données nécessaires.
 
-% code du fichier dmin.py
+\lstinputlisting{../dmin.py}
 
 L'utilisation se résumera aux lignes de code suivante:
 
-% lignes de code
+\begin{lstlisting}
+from dmin import DMIN
+
+dmin = DMIN()
+dmin.fit(<data>, <label>)
+
+# Prediction
+dmin.score(<data>)
+
+# Score
+dmin.score(<data>, <label>)
+
+\end{lstlisting}
 
 On peut donc déterminer le taux de réussite via la fonction membre \lstinline|score(<données à tester>, <labels correspondants>)|.
 
 Dans le cas de nos données de développement, on obtient un score de 68,80\% pour une exécution de 96,45 secondes.
-Sur l'ensemble d'entraînement il est intérêssant de voir que le score n'est pas 100\% mais moins,
+Sur l'ensemble d'entraînement il est intéressant de voir que le score n'est pas 100\% mais moins,
 
 
 \end{document}
