@@ -25,10 +25,20 @@
 \begin{document}
 \maketitle
 
-\section{Implémentation du classifieur à distance minimum (DMIN)}
+\section{Implémentation et utilisation du classificateur à distance minimum (DMIN)}
 
-On choisi d'implémenter ce classifieur sous forme d'une classe, ceci étant le plus courant et le plus pratique pour encapsuler les comportements et stocker les données nécessaires.
+On choisi d'implémenter ce classificateur sous forme d'une classe, ceci étant le plus courant et le plus pratique pour encapsuler les comportements et stocker les données nécessaires.
 
-\inputminted{python}{../dmin.py}[breaklines=true]
+% code du fichier dmin.py
+
+L'utilisation se résumera aux lignes de code suivante:
+
+% lignes de code
+
+On peut donc déterminer le taux de réussite via la fonction membre \lstinline|score(<données à tester>, <labels correspondants>)|.
+
+Dans le cas de nos données de développement, on obtient un score de 68,80\% pour une exécution de 96,45 secondes.
+Sur l'ensemble d'entraînement il est intérêssant de voir que le score n'est pas 100\% mais moins,
+
 
 \end{document}
