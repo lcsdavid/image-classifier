@@ -75,7 +75,7 @@
       {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1
 }
 
-\author{Lucas David \& Théo Legars}
+\author{Lucas David \& Théo Legras}
 
 \title{Rapport de projet de reconnaissance d'images}
 \date{}
@@ -85,28 +85,37 @@
 
 \section{Implémentation et utilisation du classificateur à distance minimum (DMIN)}
 
-On choisi d'implémenter ce classificateur sous forme d'une classe, ceci étant le plus courant et le plus pratique pour encapsuler les comportements et stocker les données nécessaires.
-
-\lstinputlisting[style=darkula]{../dmin.py}
-
-L'utilisation se résumera aux lignes de code suivante:
+On choisi d'implémenter ce classificateur sous forme d'une classe, ceci étant le plus courant et le plus pratique pour encapsuler les comportements et stocker les données nécessaires (extrait du fichier {\textbf{\ttfamily dmin.py}):
 \begin{lstlisting}[style=darkula]
-from dmin import DMIN
+import numpy as np
 
-dmin = DMIN()
-dmin.fit(<data>, <label>)
+class DMIN:
+	def __init__(self):
+		self.data = np.array([])
+		self.label = np.array([])
+		self.n_samples = 0
 
-# Prediction
-dmin.prediction(<data>)
+	def fit(self, data, label):
+		self.data = data
+		self.label = label
+		self.n_samples = len(set(label))
+		return self
+		
+	def predict(self, data):
+		return [self.label[np.argmin(np.sum(np.subtract(self.data, data[iterator]) ** 2, axis=1))] for iterator in range(0, len(data))]
 
-# Score
-dmin.score(<data>, <label>)
+	def score(self, data, label):
+		return np.count_nonzero(self.predict(data) == label) / len(data)
 \end{lstlisting}
 
-On peut donc déterminer le taux de réussite via la fonction membre \lstinline[style=default]|score(<données à tester>, <labels correspondants>)|.
+L'utilisation se résumera à l'instanciation de \lstinline[style=default]|DMIN| à l'appel de \lstinline[style=default]|DMIN.fit| et selon l'usage l'appel de \lstinline[style=default]|DMIN.predict| et \lstinline[style=default]|DMIN.score|.
+En particulier, on peut donc déterminer le taux de réussite via la fonction membre \lstinline[style=default]|DMIN.score(<données à tester>, <labels correspondants>)|.
 
 Dans le cas de nos données de développement, on obtient un score de 68,80\% pour une exécution de 96,45 secondes.
-Sur l'ensemble d'entraînement il est intéressant de voir que le score n'est pas 100\% mais moins,
+Il est toujours intéressant de noter que si on teste l'ensemble d'entraînement, on obtient le score parfait... On verra plus tard que ce n'est pas le cas de tous les algorithmes car cela peut être un indicateur d'\textit{overfitting} (du surapprentissage ou de la surinterprétation), c'est-à-dire correspond trop étroitement aux données.
+
+\section{Utilisation de l'analyse en composantes principales (PCA) et application à DMIN}
+
 
 
 \end{document}
