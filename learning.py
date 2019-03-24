@@ -18,9 +18,10 @@ testX = np.load('data/dev_img.npy')
 
 def BenchmarkPCA(csvfile, n_range, algorithms):
 	csvwriter = csv.writer(csvfile, delimiter=';')
-	csvwriter.writerow(['n_components (%)', 'n_components (dim)', 'Execution time PCA', 
-						'Score DMIN', 'Execution time DMIN', 'Score SVC','Execution time SVC', 
-						'Score neighbors', 'Execution time neighbors'])
+	first_row = ['n_components (%)', 'n_components (dim)']
+	for algorithm in algorithms:
+		first_row.extend(['Execution time {}'.format(algorithm), 'Score {}'.format(algorithm)])
+	csvwriter.writerow(first_row)
 
 	for n in n_range:
 		print('PCA with n_components={}:'.format(n))
@@ -49,13 +50,6 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 			csvrow.extend([algorithm_score, end - start])
 		csvwriter.writerow(csvrow)
 
-BenchmarkPCA(open('generated/pca.csv', 'w'), np.array(range(5, 100, 5)) / 100, [DMIN, SVC, KNeighborsClassifier])
-BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(55, 70, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
+# BenchmarkPCA(open('generated/pca.csv', 'w'), np.array(range(5, 100, 5)) / 100, [DMIN, SVC, KNeighborsClassifier])
+# BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(60, 75, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
 
-"""
-pca = PCA(n_components=0.95)
-reducedX = pca.fit_transform(X)
-reducedDevX = pca.transform(devX)
-dmin = DMIN()
-dmin.fit(reducedX, Y)
-print('Score: {}'.format(dmin.score(reducedDevX, devY)))"""
