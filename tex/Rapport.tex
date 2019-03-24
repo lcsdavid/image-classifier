@@ -18,8 +18,28 @@
 
 \usepackage[top=2cm,bottom=2cm,left=18mm,right=18mm]{geometry}
 
-\lstset{
-    backgroundcolor=\color[HTML]{2B2B2B}, 
+\lstdefinestyle{darkula}{backgroundcolor=\color[HTML]{2B2B2B}, 
+    basicstyle=\ttfamily\color[HTML]{A9B7C6},  
+    commentstyle=\color[HTML]{808080},
+    keywordstyle=\color[HTML]{CC7832},
+    otherkeywords={self},
+    numberstyle=\ttfamily\small\color[HTML]{6897BB},
+    stringstyle=\color[HTML]{6A8759},
+    breakatwhitespace=false,         
+    breaklines=true,        
+    columns=fullflexible,  
+    frame=single, 
+    framexleftmargin=6mm,  
+    keepspaces=true,  
+    numbers=left,                    
+    numbersep=5pt, 	
+	tabsize=2,
+	showspaces=false,                
+    showstringspaces=false,
+    showtabs=false
+}
+
+\lstdefinestyle{inlined}{backgroundcolor=\color[HTML]{2B2B2B}, 
     basicstyle=\ttfamily\color[HTML]{A9B7C6},  
     commentstyle=\color[HTML]{808080},
     keywordstyle=\color[HTML]{CC7832},
@@ -29,8 +49,16 @@
     breakatwhitespace=false,         
     breaklines=true,        
     columns=fullflexible,          
-    keepspaces=true,                          
-    language=Python,
+    keepspaces=true,  
+    numbers=left,                    
+    numbersep=5pt, 	
+	tabsize=2,
+	showspaces=false,                
+    showstringspaces=false,
+    showtabs=false
+}
+
+\lstset{
     literate={á}{{\'a}}1 {é}{{\'e}}1 {í}{{\'i}}1 {ó}{{\'o}}1 {ú}{{\'u}}1
       {Á}{{\'A}}1 {É}{{\'E}}1 {Í}{{\'I}}1 {Ó}{{\'O}}1 {Ú}{{\'U}}1
       {à}{{\`a}}1 {è}{{\`e}}1 {ì}{{\`i}}1 {ò}{{\`o}}1 {ù}{{\`u}}1
@@ -45,12 +73,6 @@
       {ç}{{\c c}}1 {Ç}{{\c C}}1 {ø}{{\o}}1 {å}{{\r a}}1 {Å}{{\r A}}1
       {€}{{\euro}}1 {£}{{\pounds}}1 {«}{{\guillemotleft}}1
       {»}{{\guillemotright}}1 {ñ}{{\~n}}1 {Ñ}{{\~N}}1 {¿}{{?`}}1,
-	numbers=left,                    
-    numbersep=5pt, 	
-	tabsize=2,
-	showspaces=false,                
-    showstringspaces=false,
-    showtabs=false
 }
 
 \author{Lucas David \& Théo Legars}
@@ -65,11 +87,11 @@
 
 On choisi d'implémenter ce classificateur sous forme d'une classe, ceci étant le plus courant et le plus pratique pour encapsuler les comportements et stocker les données nécessaires.
 
-\lstinputlisting{../dmin.py}
+\lstinputlisting[language=Python, style=darkula]{../dmin.py}
 
 L'utilisation se résumera aux lignes de code suivante:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=Python, style=darkula]
 from dmin import DMIN
 
 dmin = DMIN()
