@@ -58,7 +58,7 @@ class DMIN:
 		return np.count_nonzero(self.predict(data) == label) / len(data)
 
 	def confusion(self, data, label):
-		 """
+		"""
 		Returns the confusion matrix corresponding to the given test data and labels.
 
 		Args:
@@ -70,7 +70,7 @@ class DMIN:
 		Returns: matrix : matrix
 			confusion matrix of self.predict(X) wrt. y 
 		"""
-		confusion_matrix = np.zeros((self.n_label, self.n_label))
+		confusion_matrix = np.zeros((self.n_label,))
 		predictions = self.predict(data)
 		for prediction in predictions:
 			confusion_matrix[label][prediction] += 1

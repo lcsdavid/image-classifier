@@ -50,10 +50,21 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 			csvrow.extend([algorithm_score, end - start])
 		csvwriter.writerow(csvrow)
 
+def confusion(clf, data, label):
+	confusion_matrix = np.zeros((len(label),))
+	predictions = clf.predict(data)
+	for prediction in predictions:
+		confusion_matrix[label][prediction] += 1
+	return confusion_matrix
+
 # BenchmarkPCA(open('generated/pca.csv', 'w'), np.array(range(5, 100, 5)) / 100, [DMIN, SVC, KNeighborsClassifier])
 # BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(60, 75, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
 
 # On génère le fichier de label solution.
+#clf = SVC(gamma='scale')
+#clf.fit(X, Y)
+#np.save('test.npy', clf.predict(testX))
+
 clf = SVC(gamma='scale')
 clf.fit(X, Y)
-np.save('np.save', clf.predict(testX))
+print(confusion(clf, devX, devY))
