@@ -179,7 +179,23 @@ En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en te
 
 \section{Choix des implémentations et utilisations des classificateurs et paramètres}
 
-Dans un premier temps, l'utilisation des plus proche voisin reste trivial grâce à l'implémentation de \lstinline[style=default]|sklearn.neighbors.KNeighborsClassifier|
+\subsection{Support Vector Machines (SVM)}
+
+Dans un premier temps, l'utilisation de la SVM rest trivial grâce à l'implémentation des classificateurs qui reprend les même fonctions \lstinline[style=default]|fit|, \lstinline[style=default]|predict| et \lstinline[style=default]|score|.
+
+On utilisera d'ailleurs \lstinline[style=default]|sklearn.svm.SVC| (les autres classificateurs n'apportant pas de fonctionnalité indispensable d'après la documentation du site).
+Pour la SVM on utilisera un gamma égale à ``scale'' au lieu de ``auto'' car ``auto'' donne des résultats qui sont bien inférieurs à ceux que l'on obtient avec ``scale'' (et que ``auto'' ne sera plus le paramètre par défaut qui sera remplacé par ``scale'' dans la prochaine mise à jour de Sklearn).
+
+On obtient une exécution d'apprentissage et de prédiction de 39,329 secondes ce qui reste très raisonnable et intéressant par rapport aux autres classificateurs surtout avec le score sur les données de développement 86,10\%.
+
+\subsection{Le plus proche voisin}
+
+Dans un premier temps, l'utilisation des plus proche voisin reste trivial grâce à l'implémentation de \lstinline[style=default]|sklearn.neighbors.KNeighborsClassifier| qui reprend les même fonctions \lstinline[style=default]|fit|, \lstinline[style=default]|predict| et  \lstinline[style=default]|score|.
+
+Dans la figure ci-dessus, on peut voir les performances du classificateur \lstinline[style=default]|sklearn.neighbors.KNeighborsClassifier| avec l'algorithme brute en fonction du nombre $k$ voisins. On peut voir qu'au début cette performance augmente, et est maximum aux alentours de 5-10 (5 étant le nombre par défaut), puis la valeur décroit. Cette décroissance est due au faite que lorsque l'on prends trop de voisins en compte on augmente le risque d'erreurs pour les points placer proche des plans qui sépare les classes entre elles (néanmoins la réussite reste aux alentours de 80% même avec 100 voisins).
+
+
+\subsection{Bien paramétrer notre PCA}
 
 Pour commencer notre analyse nous avons choisis d'appliquer la PCA à différentes variance sur différentes méthodes proposer afin d'en analyser les résultats et de proposer un segment d'utilisation optimal de la PCA sur ce modèle. Pour ce faire, nous avons créer une fonction générique \lstinline[style=default]|BenchmarkPCA| permettant de tester les classificateurs fournies en paramètre et d'en extraire les temps d'exécutions et scores correspondants.
 \begin{lstlisting}[style=darkula]
