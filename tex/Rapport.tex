@@ -9,6 +9,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{array}
 \usepackage{xcolor}
 \usepackage{tikz}
 \usepackage{pdfpages}
@@ -146,10 +147,9 @@ print('Score: {}'.format(dmin.score(reducedDevX, devY)))
 
 En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en temps très raisonnable et permet de réduire drastiquement le temps d'exécution de DMIN. De plus, on remarquera que le fait d'appliquer la PCA améliore un peu le score lorsque l'on garde jusqu'à 50\% de la variance des données, on peut se douter que le fait de retirer certaine dimensions à diminuer en quelques sortes le bruit de l'image néfaste dans le cas de l'algorithme DMIN.
 
-
-\begin{tabular}{ll}
-    \sffamily\small
-	\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{m{8,5cm}m{}}
+    \sffamily\small\centering
+    \begin{tabular}{|c|c|c|c|c|}
         \hline
         \tiny n (\%) & \tiny n (dims) & \tiny Execution time PCA & \tiny Score DMIN & \tiny Execution time DMIN \\
         \hline
@@ -174,14 +174,78 @@ En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en te
         0,95         & 182            & 0,821s                   & 82,36\%          & 11,542s    \\
         1            & 784            & --                       & 68,80\%          & 96,458s    \\
         \hline
-    \end{tabular}
-
-    \includegraphics[scale=0.5]{PCA+DMIN.pdf}
+    \end{tabular} & \includegraphics[scale=0.45]{PCA+DMIN.pdf} \\
 \end{tabular}
 
+\section{Choix des implémentations et utilisations des classificateurs et paramètres}
 
 
 
-\end{multicols}
+Pour commencer notre analyse nous avons choisis d'appliquer la PCA à différentes variance sur différentes méthodes proposer afin d'en analyser les résultats et de proposer un segment d'utilisation optimal de la PCA sur ce modèle. Pour ce faire, nous avons créer une fonction générique \lstinline[style=default]|BenchmarkPCA| permettant de tester les classificateurs fournies en paramètre et d'en extraire les temps d'exécutions et scores correspondants.
+\begin{lstlisting}[style=darkula]
+def BenchmarkPCA(csvfile, n_range, algorithms):
+	csvwriter = csv.writer(csvfile, delimiter=';')
+	first_row = ['n_components (%)', 'n_components (dims)', 'Execution time PCA']
+	for algorithm in algorithms:
+		first_row.extend(['Score {}'.format(algorithm), 'Execution time {}'.format(algorithm)])
+	csvwriter.writerow(first_row)
+
+	# On fait une PCA pour chaque valeur
+	for n in n_range:
+		print('PCA with n_components={}:'.format(n))
+		start = time.time()
+		pca = PCA(n_components=n)
+		reducedX = pca.fit_transform(X)
+		reducedDevX = pca.transform(devX)
+		end = time.time()
+		print('PCA both fit and transform (on training and dev data) processed in {} sec...'.format(end - start))
+		print('\tn_components={} reduce 784 dimensions to {} dimensions.\n'.format(n, np.shape(reducedX)[1]))
+		csvrow = [n, np.shape(reducedX)[1], end - start]
+		
+		# On test chaque algorithm de la liste
+		for algorithm in algorithms:
+			print('Testing {} algorithm:'.format(algorithm))
+			start = time.time()
+			if algorithm == SVC:
+				# Le mode par défaut dans la prochaine version est avec gamma='scale' et on voit la différence.
+				algorithm_instance = algorithm(gamma='scale')
+			else:
+				algorithm_instance = algorithm()
+			algorithm_instance.fit(reducedX, Y)
+			algorithm_score = algorithm_instance.score(reducedDevX, devY)
+			end = time.time()
+			print('Score: {}'.format(algorithm_score))
+			print('Execution time: {}\n'.format(end - start))
+			csvrow.extend([algorithm_score, end - start])
+		csvwriter.writerow(csvrow)
+\end{lstlisting}
+
+{\sffamily\scriptsize\centering
+\begin{tabular}{|*{13}{c|}}
+    \hline
+    \tiny n (\%) & \tiny $\frac{\text{Score}^{2}}{\text{Exec. time DMIN}}$ & \tiny Score SVC & \tiny Exec. time SVC & \tiny $\frac{\text{Score}^{2}}{\text{Exec. time SVC}}$ & \tiny Score neighbors & \tiny Exec. time neighbors & \tiny $\frac{\text{Score}^{2}}{\text{Execution time neighbors}}$ & \tiny Avg $\frac{\text{Score}^{2}}{\text{Execution time}}$ \\
+    \hline
+    5,00\%  & 0,33 & 31,94\% & 3,440s  & 0,01 & 25,18\% & 0,082s  & 0,77 & 0,37 \\
+    10,00\% & 0,33 & 31,94\% & 3,421s  & 0,01 & 25,18\% & 0,082s  & 0,77 & 0,37 \\
+    15,00\% & 0,33 & 31,94\% & 3,467s  & 0,01 & 25,18\% & 0,087s  & 0,73 & 0,35 \\
+    20,00\% & 0,32 & 31,94\% & 3,432s  & 0,01 & 25,18\% & 0,084s  & 0,75 & 0,36 \\
+    25,00\% & 0,33 & 31,94\% & 3,439s  & 0,01 & 25,18\% & 0,083s  & 0,77 & 0,37 \\
+    30,00\% & 0,97 & 54,58\% & 1,886s  & 0,09 & 51,38\% & 0,084s  & 3,13 & 1,40 \\
+    35,00\% & 1,00 & 54,58\% & 1,896s  & 0,09 & 51,38\% & 0,085s  & 3,11 & 1,40 \\
+    40,00\% & 0,99 & 54,58\% & 1,891s  & 0,09 & 51,38\% & 0,084s  & 3,14 & 1,40 \\
+    45,00\% & 0,97 & 54,58\% & 1,909s  & 0,09 & 51,38\% & 0,084s  & 3,13 & 1,40 \\
+    50,00\% & 1,26 & 63,52\% & 1,637s  & 0,16 & 61,58\% & 0,089s  & 4,27 & 1,90 \\
+    55,00\% & 1,45 & 70,22\% & 1,476s  & 0,23 & 68,96\% & 0,095s  & 5,00 & 2,23 \\
+    60,00\% & 1,41 & 73,18\% & 1,430s  & 0,27 & 72,18\% & 0,106s  & 4,92 & 2,20 \\
+    65,00\% & 1,36 & 75,06\% & 1,400s  & 0,30 & 74,72\% & 0,114s  & 4,91 & 2,19 \\
+    70,00\% & 1,15 & 80,20\% & 1,446s  & 0,36 & 79,06\% & 0,142s  & 4,41 & 1,97 \\
+    75,00\% & 0,86 & 82,44\% & 1,627s  & 0,34 & 81,28\% & 0,203s  & 3,25 & 1,48 \\
+    80,00\% & 0,61 & 84,34\% & 1,965s  & 0,31 & 82,32\% & 0,316s  & 2,14 & 1,02 \\
+    85,00\% & 0,35 & 85,38\% & 2,725s  & 0,23 & 83,64\% & 0,557s  & 1,26 & 0,61 \\
+    90,00\% & 0,16 & 86,18\% & 4,532s  & 0,14 & 83,70\% & 1,322s  & 0,53 & 0,28 \\
+    95,00\% & 0,06 & 86,28\% & 9,333s  & 0,07 & 83,36\% & 3,800s  & 0,18 & 0,10 \\
+    100\%   & 0,00 & 86,10\% & 39,329s & 0,02 & 82,98\% & 51,104s & 0,01 & 0,01 \\
+    \hline
+\end{tabular}}
 
 \end{document}

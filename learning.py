@@ -50,8 +50,8 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 			csvrow.extend([algorithm_score, end - start])
 		csvwriter.writerow(csvrow)
 
-BenchmarkPCA(open('generated/pca.csv', 'w'), np.array(range(5, 100, 5)) / 100, [DMIN, SVC, KNeighborsClassifier])
-BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(60, 75, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
+# BenchmarkPCA(open('generated/pca.csv', 'w'), np.array(range(5, 100, 5)) / 100, [DMIN, SVC, KNeighborsClassifier])
+# BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(60, 75, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
 
 dmin = SVC(gamma='scale')
 dmin.fit(X, Y)
