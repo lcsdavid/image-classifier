@@ -145,7 +145,9 @@ print('Score: {}'.format(dmin.score(reducedDevX, devY)))
 
 \end{lstlisting}
 
-En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en temps très raisonnable et permet de réduire drastiquement le temps d'exécution de DMIN. De plus, on remarquera que le fait d'appliquer la PCA améliore un peu le score lorsque l'on garde jusqu'à 50\% de la variance des données, on peut se douter que le fait de retirer certaine dimensions à diminuer en quelques sortes le bruit de l'image néfaste dans le cas de l'algorithme DMIN.
+Comme nous pouvons le voir, nous appliquons la transformation à la fois sur les données d'entraînement et sur les données de développement sinon ce ne sera pas cohérent pour notre classificateur, cependant les étiquettes n'ont pas besoin d'être modifié étant donnée qu'elles ne sont pas concernées par la transformation.
+
+De plus, il est important de dire que la PCA a un temps d'exécution très faible de l'ordre de la seconde, ce qui rend son utilisation vraiment profitable et ce quelque soit le nombre de dimensions résultant de la réduction.
 
 \begin{tabular}{m{8,5cm}m{}}
     \sffamily\small\centering
@@ -177,6 +179,10 @@ En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en te
     \end{tabular} & \includegraphics[scale=0.4]{PCA+DMIN.pdf} \\
 \end{tabular}
 
+En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en temps très raisonnable et permet de réduire drastiquement le temps d'exécution de DMIN. De plus, on remarquera que le fait d'appliquer la PCA améliore un peu le score lorsque l'on garde jusqu'à 50\% de la variance des données, on peut se douter que le fait de retirer certaine dimensions à diminuer en quelques sortes le bruit de l'image néfaste dans le cas de l'algorithme DMIN.
+
+\newpage
+
 \section{Choix des implémentations et utilisations des classificateurs et paramètres}
 
 \subsection{Support Vector Machines (SVM)}
@@ -184,16 +190,24 @@ En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en te
 Dans un premier temps, l'utilisation de la SVM rest trivial grâce à l'implémentation des classificateurs qui reprend les même fonctions \lstinline[style=default]|fit|, \lstinline[style=default]|predict| et \lstinline[style=default]|score|.
 
 On utilisera d'ailleurs \lstinline[style=default]|sklearn.svm.SVC| (les autres classificateurs n'apportant pas de fonctionnalité indispensable d'après la documentation du site).
-Pour la SVM on utilisera un gamma égale à ``scale'' au lieu de ``auto'' car ``auto'' donne des résultats qui sont bien inférieurs à ceux que l'on obtient avec ``scale'' (et que ``auto'' ne sera plus le paramètre par défaut qui sera remplacé par ``scale'' dans la prochaine mise à jour de Sklearn).
+Pour la SVM on utilisera un gamma égale à ``scale'' au lieu de ``auto'' car ``auto'' donne des résultats qui sont bien inférieurs à ceux que l'on obtient avec ``scale'' et parfois même incompréhensible surtout avec l'usage de la PCA (de plus ``auto'' ne sera plus le paramètre par défaut qui sera remplacé par ``scale'' dans la prochaine mise à jour de scikit-learn).
 
 On obtient une exécution d'apprentissage et de prédiction de 39,329 secondes ce qui reste très raisonnable et intéressant par rapport aux autres classificateurs surtout avec le score sur les données de développement 86,10\%.
+
+\newpage
 
 \subsection{Le plus proche voisin}
 
 Dans un premier temps, l'utilisation des plus proche voisin reste trivial grâce à l'implémentation de \lstinline[style=default]|sklearn.neighbors.KNeighborsClassifier| qui reprend les même fonctions \lstinline[style=default]|fit|, \lstinline[style=default]|predict| et  \lstinline[style=default]|score|.
 
-Dans la figure ci-dessus, on peut voir les performances du classificateur \lstinline[style=default]|sklearn.neighbors.KNeighborsClassifier| avec l'algorithme brute en fonction du nombre $k$ voisins. On peut voir qu'au début cette performance augmente, et est maximum aux alentours de 5-10 (5 étant le nombre par défaut), puis la valeur décroit. Cette décroissance est due au faite que lorsque l'on prends trop de voisins en compte on augmente le risque d'erreurs pour les points placer proche des plans qui sépare les classes entre elles (néanmoins la réussite reste aux alentours de 80% même avec 100 voisins).
+\begin{center}
+	\includegraphics[scale=0.75]{KNeighbors.png}
+\end{center}
 
+
+Dans la figure ci-dessus, on peut voir les performances du classificateur \lstinline[style=default]|sklearn.neighbors.KNeighborsClassifier| avec l'algorithme brute en fonction du nombre $k$ de voisins. On peut voir qu'au début cette performance augmente, et est maximum aux alentours de 5 à 10 (5 étant le nombre par défaut), puis la valeur décroit. Cette décroissance est due au faite que lorsque l'on prends trop de voisins en compte on augmente le risque d'erreurs pour les points placer proche des plans qui sépare les classes entre elles (néanmoins la réussite reste aux alentours de 80\% même avec 100 voisins).
+
+\newpage
 
 \subsection{Bien paramétrer notre PCA}
 
@@ -269,5 +283,11 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 
 Sur le graphe ci-dessus, nous avons tracé le ratio entre le score au carré et le temps d'exécution. Le score est au carré pour une meilleure visibilité des courbes et car nous apportons une importance supplémentaire à la qualité des prédictions (on pourrait d'ailleurs passer le score au cube ou bien le contraire en fonction de nos besoins).
 On peut remarquer que la courbe explicite un segment optimale entre 55\% et 70\% de variance des données en moyenne (et globalement pour la majorité des classificateurs testé). Néanmoins comme l'on sais que la SVM  est le classificateur le plus optimal pour notre modèle (et celui que nous allons sélectionner), nous avons choisi de nous baser sur une PCA à 80\% : cela permet de garder plus de données significatives sans perdre tant de temps par rapport aux autre classificateurs.
+
+\newpage
+
+\subsection{Utilisation de la SVM pour nos données de test}
+
+Comme le montre la précédente partie, la SVM reste supérieur quelque soit la PCA appliqué que se soit en précision des prédictions que en temps d'exécution.
 
 \end{document}
