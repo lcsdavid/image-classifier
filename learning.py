@@ -61,10 +61,6 @@ def confusion(clf, data, label):
 # BenchmarkPCA(open('generated/pca_precise.csv', 'w'), np.array(range(60, 75, 1)) / 100, [DMIN, SVC, KNeighborsClassifier])
 
 # On génère le fichier de label solution.
-#clf = SVC(gamma='scale')
-#clf.fit(X, Y)
-#np.save('test.npy', clf.predict(testX))
-
 clf = SVC(gamma='scale')
 clf.fit(X, Y)
-print(confusion(clf, devX, devY))
+np.save('test.npy', clf.predict(testX))

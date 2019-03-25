@@ -83,7 +83,29 @@
 \date{}
 
 \begin{document}
-\maketitle
+\begin{titlepage}
+  \begin{sffamily}
+  \begin{center}
+    \textsc{\LARGE Polytech Paris-Sud}\\[2cm]
+    \HRule \\[0.4cm]
+    { \huge \bfseries Rapport de projet de reconnaissance d'images\\[0.4cm] }
+
+    \HRule \\[2cm] \\
+
+    \begin{minipage}{0.4\textwidth}
+      \begin{center} \large
+        Lucas David \\
+        Théo Legras \\
+      \end{center}
+    \end{minipage}
+    \vfill
+
+    % Bottom of the page
+    {\large 25\iem{} Mars 2019}
+
+  \end{center}
+  \end{sffamily}
+\end{titlepage}
 
 \newpage
 
@@ -181,7 +203,7 @@ De plus, il est important de dire que la PCA a un temps d'exécution très faibl
     \end{tabular} & \includegraphics[scale=0.4]{PCA+DMIN.pdf} \\
 \end{tabular}
 
-En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en temps très raisonnable et permet de réduire drastiquement le temps d'exécution de DMIN. De plus, on remarquera que le fait d'appliquer la PCA améliore un peu le score lorsque l'on garde jusqu'à 50\% de la variance des données, on peut se douter que le fait de retirer certaine dimensions à diminuer en quelques sortes le bruit de l'image néfaste dans le cas de l'algorithme DMIN.
+En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en temps très raisonnable et permet de réduire drastiquement le temps d'exécution de DMIN. De plus, on remarquera que le fait d'appliquer la PCA améliore un peu le score lorsque l'on garde jusqu'à 50\% de la variance des données, on peut se douter que le fait de retirer certaines dimensions à diminuer en quelques sortes le bruit de l'image néfaste dans le cas de l'algorithme DMIN.
 
 \newpage
 
@@ -290,6 +312,5 @@ On peut remarquer que la courbe explicite un segment optimale entre 55\% et 70\%
 
 \subsection{Utilisation de la SVM pour nos données de test}
 
-Comme le montre la précédente partie, la SVM reste supérieur quelque soit la PCA appliqué que se soit en précision des prédictions que en temps d'exécution.
-
+Comme le montre la précédente partie, la SVM reste supérieur quelque soit la PCA appliqué que se soit en précision des prédictions que en temps d'exécution. En effet, avec la bonne maitrise du compromis entre rapidité et efficacité la SVM reste supérieur en tout point par rapport aux autres classificateurs sur notre modèle. C'est pour quoi nous avons généré notre fichier comprenant les étiquettes résultant de la prédiction à l'aide cette méthode.
 \end{document}
