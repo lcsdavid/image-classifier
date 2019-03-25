@@ -174,12 +174,12 @@ En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en te
         0,95         & 182            & 0,821s                   & 82,36\%          & 11,542s    \\
         1            & 784            & --                       & 68,80\%          & 96,458s    \\
         \hline
-    \end{tabular} & \includegraphics[scale=0.45]{PCA+DMIN.pdf} \\
+    \end{tabular} & \includegraphics[scale=0.4]{PCA+DMIN.pdf} \\
 \end{tabular}
 
 \section{Choix des implémentations et utilisations des classificateurs et paramètres}
 
-
+Dans un premier temps, l'utilisation des plus proche voisin reste trivial grâce à l'implémentation de \lstinline[style=default]|sklearn.neighbors.KNeighborsClassifier|
 
 Pour commencer notre analyse nous avons choisis d'appliquer la PCA à différentes variance sur différentes méthodes proposer afin d'en analyser les résultats et de proposer un segment d'utilisation optimal de la PCA sur ce modèle. Pour ce faire, nous avons créer une fonction générique \lstinline[style=default]|BenchmarkPCA| permettant de tester les classificateurs fournies en paramètre et d'en extraire les temps d'exécutions et scores correspondants.
 \begin{lstlisting}[style=darkula]
@@ -190,8 +190,7 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 		first_row.extend(['Score {}'.format(algorithm), 'Execution time {}'.format(algorithm)])
 	csvwriter.writerow(first_row)
 
-	# On fait une PCA pour chaque valeur
-	for n in n_range:
+	for n in n_range: # On fait une PCA pour chaque valeur
 		print('PCA with n_components={}:'.format(n))
 		start = time.time()
 		pca = PCA(n_components=n)
@@ -201,9 +200,8 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 		print('PCA both fit and transform (on training and dev data) processed in {} sec...'.format(end - start))
 		print('\tn_components={} reduce 784 dimensions to {} dimensions.\n'.format(n, np.shape(reducedX)[1]))
 		csvrow = [n, np.shape(reducedX)[1], end - start]
-		
 		# On test chaque algorithm de la liste
-		for algorithm in algorithms:
+		for algorithm in algorithms: 
 			print('Testing {} algorithm:'.format(algorithm))
 			start = time.time()
 			if algorithm == SVC:
@@ -220,6 +218,7 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
 		csvwriter.writerow(csvrow)
 \end{lstlisting}
 
+À partir des résultats de l'algorithme dessus, on obtient le tableau de valeur et son graphe associé:
 {\sffamily\scriptsize\centering
 \begin{tabular}{|*{13}{c|}}
     \hline
@@ -247,5 +246,12 @@ def BenchmarkPCA(csvfile, n_range, algorithms):
     100\%   & 0,00 & 86,10\% & 39,329s & 0,02 & 82,98\% & 51,104s & 0,01 & 0,01 \\
     \hline
 \end{tabular}}
+
+\begin{center}
+	\includegraphics[scale=0.5]{BenchmarkPCA.pdf}
+\end{center}
+
+Sur le graphe ci-dessus, nous avons tracé le ratio entre le score au carré et le temps d'exécution. Le score est au carré pour une meilleure visibilité des courbes et car nous apportons une importance supplémentaire à la qualité des prédictions (on pourrait d'ailleurs passer le score au cube ou bien le contraire en fonction de nos besoins).
+On peut remarquer que la courbe explicite un segment optimale entre 55\% et 70\% de variance des données en moyenne (et globalement pour la majorité des classificateurs testé). Néanmoins comme l'on sais que la SVM  est le classificateur le plus optimal pour notre modèle (et celui que nous allons sélectionner), nous avons choisi de nous baser sur une PCA à 80\% : cela permet de garder plus de données significatives sans perdre tant de temps par rapport aux autre classificateurs.
 
 \end{document}
