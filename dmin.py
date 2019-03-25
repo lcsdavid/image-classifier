@@ -56,3 +56,22 @@ class DMIN:
 			Mean accuracy of self.predict(X) wrt. y 
 		"""
 		return np.count_nonzero(self.predict(data) == label) / len(data)
+
+	def confusion(self, data, label):
+		 """
+		Returns the confusion matrix corresponding to the given test data and labels.
+
+		Args:
+			data : array-like
+				Test samples.
+			label : array-like
+				True labels for data.
+
+		Returns: matrix : matrix
+			confusion matrix of self.predict(X) wrt. y 
+		"""
+		confusion_matrix = np.zeros((self.n_label, self.n_label))
+		predictions = self.predict(data)
+		for prediction in predictions:
+			confusion_matrix[label][prediction] += 1
+		return confusion_matrix
