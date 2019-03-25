@@ -11,6 +11,7 @@
 \usepackage{amsthm}
 \usepackage{xcolor}
 \usepackage{tikz}
+\usepackage{svg}
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{listings}
@@ -143,7 +144,7 @@ print('Score: {}'.format(dmin.score(reducedDevX, devY)))
 
 \end{lstlisting}
 
-En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en temps très raisonnable et permet de réduire drastiquement le temps d'exécution de DMIN.
+En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en temps très raisonnable et permet de réduire drastiquement le temps d'exécution de DMIN. De plus, on remarquera que le fait d'appliquer la PCA améliore un peu le score lorsque l'on garde jusqu'à 50\% de la variance des données, on peut se douter que le fait de retirer certaine dimensions à diminuer en quelques sortes le bruit de l'image néfaste dans le cas de l'algorithme DMIN.
 
 {
     \sffamily\small
@@ -174,5 +175,7 @@ En terme de vitesse d'exécution initialiser la PCA et l'appliquer se fait en te
     \hline
     \end{tabular}
 }
+
+\includesvg{Différentes applications de la PCA et de DMIN.svg}
 
 \end{document}
