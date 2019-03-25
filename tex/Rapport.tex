@@ -116,9 +116,11 @@ Il est toujours intéressant de noter que si on teste l'ensemble d'entraînement
 
 \section{Utilisation de l'analyse en composantes principales (PCA) et application à DMIN}
 
-L'utilisation de l'Implémentation de la PCA (\lstinline[style=default]|sklearn.decompostion.PCA|) est plutôt simple. On peut choisir via le paramêtre \lstinline[style=default]|n_components| le nombre de dimension à garder ou si la valeur est strictement inférieur à 1, la proportion des données à garder en pourcentage de variance.
-Nous nous choisissons de faire nos tests en modulant en variance plus qu'en nombre de dimension car la notion de variance peut être mis en parallèle avec la perte de précision à postériori de la PCA.
-De plus cela permet d'écarter les cas de réductions dans des nombres dimension proches (e.g. passer de 760 à 700 ne signifie pas grand chose alors que de 100 à 40 si) effectivement selon le modèle on n'obtiendra pas la même courbe 'variance | nombre de dimensions' et ce n'est générallement pas linéaire.
+L'utilisation de l'Implémentation de la PCA (\lstinline[style=default]|sklearn.decompostion.PCA|) est plutôt simple. 
+On peut choisir via le paramêtre \lstinline[style=default]|n_components| le nombre de dimensions à garder, \linebreak[4] si $0 \leq$  \lstinline[style=default]|n_components| $< 1$, on indique la proportion des données à garder en variance (\%).
+
+Nous nous choisissons de faire nos tests en modulant en variance plus qu'en nombre de dimensions car la notion de variance peut être mise en parallèle avec la perte de précision à postériori de la PCA.
+De plus cela permet d'écarter les cas de réductions dans des nombres dimensions proches (e.g. passer de 760 dims. à 700 dims. ne signifie pas grand chose alors que de 100 dims. à 40 dims. à un impact visible). Effectivement, selon le modèle on n'obtiendra pas la même courbe ``Variance des données par rapport aux nombres de dimensions'' et ce n'est généralement pas linéaire.
 
 Globalement, nous appliquons dans les grandes ligne la PCA et DMIN sur les données réduites comme suit:
 \begin{lstlisting}[style=darkula]
@@ -135,7 +137,7 @@ reducedX = pca.fit_transform(X) # On colle au modèle et on transforme X.
 print('Dimensions: {}'.format(reducedX)) # On peut afficher le nombre de dimension en valeur.
 reducedDevX = pca.transform(reducedDevX) # On transforme devX.
 
-dmin = DMIN()
+dmin = DMIN() # On utilise DMIN.
 dmin.fit(reducedX, Y)
 print('Score: {}'.format(dmin.score(reducedDevX, devY)))
 
